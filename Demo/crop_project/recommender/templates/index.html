@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Recommendation</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background: #f0f8ff;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        input{
+            width: 300px;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button{
+            padding: 10px 20px;
+            background: green;
+            color: white;
+            border: none;
+        }
+
+        h1{
+            color: darkblue;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <h1>Crop Recommendation System</h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <input type="text" placeholder="Nitrogen"><br>
+
+        <input type="text" placeholder="Phosphorus"><br>
+
+        <input type="text" placeholder="Potassium"><br>
+
+        <input type="text" placeholder="Temperature"><br>
+
+        <input type="text" placeholder="Humidity"><br>
+
+        <input type="text" placeholder="pH"><br>
+
+        <input type="text" placeholder="Rainfall"><br>
+
+        <button type="submit">
+            Predict Crop
+        </button>
+
+    </form>
+
+    <h2>{{ result }}</h2>
+
+</body>
+</html>
