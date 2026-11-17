@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #d2fcd2;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+<div class="row justify-content-center ">
+    <div class="col-lg-10">
+        <div class="card shadow-lg border-0 overflow-hidden">
+            <div class="row">
+                <div class="col-md-6 position-relative d-none d-md-block" style="background: url('/static/images/signup-image.png') center/cover no-repeat;">
+                    <div class="position-absolute start-0 top-0 w-100 h-100 " style="background: linear-gradient(180deg,rgba(0,0,0,0.1),rgba(0,0,0,1));">
+
+                    </div>
+                    <div class="position-absolute bottom-0 p-4 text-white">
+                        <h4 class="fw-semibold mb-2">Create Account</h4>
+                        <p class="mb-3 text-white-50">Join our community and get started with your free account today!</p>
+                        <ul class="small list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Access exclusive features</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Personalized recommendations</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> 24/7 customer support</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 bg-white">
+                    <div class="p-5">
+                        <h3 class="mb-3"><i class="fas fa-user-plus me-2 text-success"></i> Create Account</h3>
+                        <form method="POST" id="signupForm">
+                            {% csrf_token %}
+                            <!-- Sign Up Form Fields -->
+                             <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Full Name<span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        <input type="text" class="form-control" name="name" placeholder="Enter your full name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Phone Number<span class="text-danger">*</span><span class="text-muted small">(min 10 characters)</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        <input type="number" class="form-control" name="phone" placeholder="Enter your phone number" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Email<span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                        <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Password<span class="text-danger">*</span><span class="text-muted small">(min 8 characters)</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                        <input type="password" class="form-control" id="pwd1" name="password" placeholder="Enter your password" required>
+                                        <button type="button" class="btn btn-outline-secondary" id="togglePwd1" title="Show/Hide"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Confirm Password<span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-shield-alt"></i></span>
+                                        <input type="password" class="form-control" id="pwd2" placeholder="Confirm your password" required>
+                                        <button type="button" class="btn btn-outline-secondary" id="togglePwd2" title="Show/Hide"><i class="fas fa-eye"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="agreement" name="agreement" required>
+                                        <label class="form-check-label">
+                                            I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" class="text-decoration-none fw-semibold text-success">Terms and Conditions</a>
+                                        </label>
+                                    </div>
+                                </div>
+                             </div>
+                            <div class="mt-4">
+                                <button type="submit" id="signupBtn" class="btn btn-success mt-3 w-100 fw-semibold rounded-pill" type="submit"><span> Create Account</span></button>
+                                <div class="text-center mt-3">
+                                    <span class="small ">Already have an account? <a class="text-decoration-none ms-1 fw-semibold text-success" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i>Login here</a></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

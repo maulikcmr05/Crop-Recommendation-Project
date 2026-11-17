@@ -1,16 +1,88 @@
 {% extends 'base.html' %}
-
-{% block title %}Home | Crop Recommendation System{% endblock %}
+{% load static %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="display-5 fw-bold">
-                <i class="fas fa-seedling me-2"></i>Crop Recommendation System
-            </h1>
-            <p class="lead">
-                Welcome to the Crop Recommendation System! Get personalized crop suggestions based on your soil and climate conditions.
-            </p>
+<style>
+    body {
+        background-color: #d2fcd2;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+<section class="hero-gradient rounded-2 p-4 mb-5 text-white">
+    <div class="row align-items-center">
+        <div class="col-lg-7">
+            <h1 class="display-5 fw-semibold mb-2">Crop Recommendation System</h1>
+            <p class="lead text-white-50 mb-2">Get personalized crop suggestions based on your soil and climate conditions, and make smarter decisions to improve yield and profitability.</p>
+            <div class="d-flex flex-wrap gap-2">
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="#" class="btn btn-success btn-lg fw-semibold"><i class="fas fa-gauge me-2"></i>Admin Dashboard</a>
+                <a href="#" class="btn btn-outline-light btn-lg fw-semibold"><i class="fas fa-table me-2"></i>View Predictions</a>
+                {% elif user.is_authenticated and not user.is_staff %}
+                <a href="#" class="btn btn-success btn-lg fw-semibold"><i class="fas fa-flask me-2"></i>Predict Now</a>
+                <a href="#" class="btn btn-outline-light btn-lg fw-semibold"><i class="fas fa-clock-rotate-left me-2"></i>View History</a>
+                {% else %}
+                <a href="#" class="btn btn-success btn-lg fw-semibold"><i class="fas fa-user me-2"></i>User Login</a>
+                <a href="#" class="btn btn-outline-light btn-lg fw-semibold"><i class="fas fa-user-plus me-2"></i>Create Account</a>
+                <a href="#" class="btn btn-success btn-lg fw-semibold"><i class="fas fa-lock me-2"></i>Admin Login</a>
+                {% endif %}
+            </div>
+            <div class="mt-3 text-white-50">
+                <i class="fa-solid fa-shield-alt me-1"></i> Your data is safe with us. We prioritize your privacy and security.
+            </div>
+        </div>
+        <div class="col-lg-5 text-center mt-4 mt-lg-0 p-3">
+            <img src="{% static 'images/1.png' %}" alt="Crop Recommendation" style="max-height: 350px;" class="img-fluid rounded-2 shadow-lg"/>
         </div>
     </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mt-4">
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-title">
+                    <div class="state-title">Users</div>
+                    <div class="state-value">1</div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-title">
+                    <div class="state-title">Predictions</div>
+                    <div class="state-value">10</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature cards -->
+    <div class="row g-3 mt-4">
+        <div class="col-md-4">
+            <div class="card bg-success bg-opacity-25 h-100 shadow-sm rounded-3">
+                <div class="card-body text-center">
+                    <i class="fas fa-seedling fa-2x mb-2 text-success"></i>
+                    <h5 class="card-title fw-semibold">Personalized Recommendations</h5>
+                    <p class="card-text text-white-50">Get crop suggestions tailored to your soil and climate conditions.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success bg-opacity-25 h-100 shadow-sm rounded-3">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-2x mb-2 text-success"></i>
+                    <h5 class="card-title fw-semibold">Data-driven Insights</h5>
+                    <p class="card-text text-white-50">Make informed decisions with our data-driven approach to crop selection.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success bg-opacity-25 h-100 shadow-sm rounded-3">
+                <div class="card-body text-center">
+                    <i class="fas fa-leaf fa-2x mb-2 text-success"></i>
+                    <h5 class="card-title fw-semibold">Sustainable Farming</h5>
+                    <p class="card-text text-white-50">Promote sustainable farming practices and improve yield and profitability.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

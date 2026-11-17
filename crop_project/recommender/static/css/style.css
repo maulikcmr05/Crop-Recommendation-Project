@@ -1,0 +1,20 @@
+.hero-gradient {
+    background: linear-gradient(135deg, #37873a, #64d26a);
+    
+}
+.stat-title {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 0.5rem;
+    padding: 2rem 2rem;
+    color: #fff;
+}
+.state-title {
+    font-size: 1rem;
+    opacity: .8;
+}
+.state-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1;
+}
