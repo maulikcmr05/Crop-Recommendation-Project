@@ -4,82 +4,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Crop Recommendation System{% endblock %}</title>
+    <title>{% block title %}Home{% endblock %} | Crop Recommendation System</title>
     <link rel="icon" type="image/png" href="{% static 'images/favicon-64.png' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.9/css/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
-    
 </head>
-<body style="background-color: #aed1ae; min-height: 100vh; display: flex; flex-direction: column;">
-    <nav class="navbar navbar-expand-lg bg-success bg-opacity-25 shadow-lg rounded-bottom-4 px-3 border-bottom border-success">
-  <div class="container-fluid">
-    <a class="navbar-brand fw-semibold" href="#"><i class="fas fa-seedling me-2 text-success"></i>Crop Recommendation</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ms-auto">
-        {% if user.is_authenticated and not user.is_staff %}
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home me-2 text-success"></i> Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'predict' %}"><i class="fas fa-flask me-2 text-success"></i>Prediction</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="#"><i class="fas fa-clock-rotate-left me-2 text-success"></i> History</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="#"><i class="fas fa-user me-2 text-success"></i>Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="#"><i class="fas fa-key me-2 text-success"></i>Change Password</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'logout' %}"><i class="fas fa-right-from-bracket me-2 text-success"></i>Logout</a>
-        </li>
-        {% elif user.is_authenticated and user.is_staff %}
+<body>
+    <div id="page-loader-bar"></div>
 
-        <li class="nav-item">
-          <a class="nav-link active" href="#"><i class="fas fa-gauge me-2 text-success"></i>Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'predict' %}"><i class="fas fa-table me-2 text-success"></i> Prediction</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="#"><i class="fas fa-user me-2 text-success"></i>Users</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="#"><i class="fas fa-key me-2 text-success"></i>Change Password</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'logout' %}"><i class="fas fa-right-from-bracket me-2 text-success"></i>Logout</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home me-2 text-success"></i> Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'login' %}"><i class="fas fa-user me-2 text-success"></i> Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'signup' %}"><i class="fas fa-user-plus me-2 text-success"></i>Sign Up</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="#"><i class="fas fa-lock me-2 text-success"></i>Admin</a>
-        </li>
-        {% endif %}
-      </ul>
+    <div id="global-loader" aria-hidden="true">
+        <div class="loader-box">
+            <div class="loader-icon-wrap">
+                <div class="loader-ring"></div>
+                <i class="fas fa-seedling loader-leaf"></i>
+            </div>
+            <div id="loader-text" class="fw-semibold text-dark small">Loading...</div>
+        </div>
     </div>
-  </div>
-</nav>
-    <main class="container-fluid py-4 px-3">
+
+    <!-- Solid Sticky Enterprise Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white mnc-navbar sticky-top px-3 py-2" style="z-index: 1030;">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2 text-dark" href="{% if user.is_authenticated and user.is_staff %}{% url 'admin_dashboard' %}{% else %}{% url 'home' %}{% endif %}">
+                <span class="mnc-brand-badge"><i class="fas fa-seedling"></i></span>
+                <span>Crop Recommendation <span class="text-success">System</span></span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto gap-1 align-items-lg-center">
+                    {% if user.is_authenticated and not user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active-route{% endif %}" href="{% url 'home' %}"><i class="fas fa-home me-1"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'predict' %}active-route{% endif %}" href="{% url 'predict' %}"><i class="fas fa-flask me-1"></i> Prediction</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'user_history' %}active-route{% endif %}" href="{% url 'user_history' %}"><i class="fas fa-clock-rotate-left me-1"></i> History</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active-route{% endif %}" href="{% url 'profile' %}"><i class="fas fa-user me-1"></i> Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'change_password' %}active-route{% endif %}" href="{% url 'change_password' %}"><i class="fas fa-key me-1"></i> Change Password</a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-outline-danger btn-sm px-3 rounded-pill fw-semibold" href="{% url 'logout' %}"><i class="fas fa-right-from-bracket me-1"></i> Logout</a>
+                        </li>
+
+                    {% elif user.is_authenticated and user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active-route{% endif %}" href="{% url 'admin_dashboard' %}"><i class="fas fa-gauge me-1"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'admin_predictions' %}active-route{% endif %}" href="{% url 'admin_predictions' %}"><i class="fas fa-database me-1"></i> Predictions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'admin_users' %}active-route{% endif %}" href="{% url 'admin_users' %}"><i class="fas fa-users me-1"></i> Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'predict' %}active-route{% endif %}" href="{% url 'predict' %}"><i class="fas fa-flask me-1"></i> Test Model</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'change_password' %}active-route{% endif %}" href="{% url 'change_password' %}"><i class="fas fa-key me-1"></i> Change Password</a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-outline-danger btn-sm px-3 rounded-pill fw-semibold" href="{% url 'logout' %}"><i class="fas fa-right-from-bracket me-1"></i> Logout</a>
+                        </li>
+
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active-route{% endif %}" href="{% url 'home' %}"><i class="fas fa-home me-1"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active-route{% endif %}" href="{% url 'login' %}"><i class="fas fa-right-to-bracket me-1"></i> Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'admin_login' %}active-route{% endif %}" href="{% url 'admin_login' %}"><i class="fas fa-user-shield me-1"></i> Admin</a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-mnc btn-sm px-3 rounded-pill" href="{% url 'signup' %}"><i class="fas fa-user-plus me-1"></i> Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Footer -->
+    <footer class="bg-white border-top py-3 mt-auto">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center small text-muted gap-2">
+            <div>
+                <strong class="text-dark">Crop Recommendation System</strong> &copy; 2026 &bull; Machine Learning Based Crop Advisory
+            </div>
+            <div class="d-flex gap-3">
+                <span><i class="fas fa-microchip text-success me-1"></i>Random Forest Engine</span>
+                <span><i class="fas fa-shield-halved text-success me-1"></i>Secure Platform</span>
+            </div>
+        </div>
+    </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.9/js/bootstrap.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     {% if messages %}
     <script>
         {% for message in messages %}
@@ -87,10 +121,70 @@
                 title: "{{ message.tags|capfirst }}",
                 text: "{{ message }}",
                 icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %}",
-                button: "OK",
+                confirmButtonColor: "#15803d",
+                confirmButtonText: "OK"
             });
         {% endfor %}
     </script>
     {% endif %}
+
+    <script>
+        (function () {
+            const mainContent = document.querySelector('main.container');
+            const loaderBar = document.getElementById('page-loader-bar');
+            const globalLoader = document.getElementById('global-loader');
+            const loaderText = document.getElementById('loader-text');
+
+            requestAnimationFrame(() => {
+                if (mainContent) mainContent.classList.add('page-loaded');
+            });
+
+            function showLoader(message = 'Loading...') {
+                if (loaderText) loaderText.textContent = message;
+                if (loaderBar) loaderBar.style.width = '80%';
+                if (globalLoader) globalLoader.classList.add('active');
+                if (mainContent) {
+                    mainContent.classList.remove('page-loaded');
+                    mainContent.classList.add('page-fade-out');
+                }
+            }
+
+            function hideLoader() {
+                if (globalLoader) globalLoader.classList.remove('active');
+                if (loaderBar) loaderBar.style.width = '0%';
+                if (mainContent) {
+                    mainContent.classList.remove('page-fade-out');
+                    mainContent.classList.add('page-loaded');
+                }
+            }
+
+            document.addEventListener('click', function (e) {
+                const link = e.target.closest('a');
+                if (!link) return;
+                const href = link.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('javascript:') || link.target === '_blank' || link.hasAttribute('download') || e.ctrlKey || e.metaKey || e.shiftKey) return;
+
+                if (link.origin === window.location.origin) {
+                    e.preventDefault();
+                    showLoader('Loading page...');
+                    setTimeout(() => { window.location.href = link.href; }, 220);
+                }
+            });
+
+            document.addEventListener('submit', function (e) {
+                const form = e.target;
+                if (!form || form.hasAttribute('data-no-transition')) return;
+
+                if (form.id === 'predicatForm') showLoader('Analyzing Soil & Climate...');
+                else if (form.id === 'profileForm') showLoader('Updating Profile...');
+                else if (form.id === 'changePwdForm') showLoader('Updating Password...');
+                else showLoader('Please wait...');
+            });
+
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) hideLoader();
+            });
+        })();
+    </script>
 </body>
 </html>

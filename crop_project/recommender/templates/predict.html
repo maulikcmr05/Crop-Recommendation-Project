@@ -3,58 +3,163 @@
 {% block title %}Predict Crop{% endblock %}
 
 {% block content %}
+<div class="mnc-banner p-4 mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div>
+        <span class="badge bg-white text-success fw-bold mb-1">ML INFERENCE ENGINE</span>
+        <h3 class="fw-bold mb-0">Soil & Climate Crop Recommendation</h3>
+        <p class="small opacity-75 mb-0">Input soil macronutrients and environmental metrics for real-time crop matching.</p>
+    </div>
+    <a href="{% url 'user_history' %}" class="btn btn-outline-light btn-sm fw-semibold">
+        <i class="fas fa-clock-rotate-left me-1"></i>View Past Predictions
+    </a>
+</div>
 
-<div class="row g-4 " >
+<div class="row g-4">
+    <!-- Left Column: Prediction Form & Reference Table -->
     <div class="col-lg-8">
-        <div class="card shadow-lg border-0">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3><i class="fas fa-flask me-2 text-success"></i>Crop Recommendation</h3>
-                    <div class="text-muted small d-none d-md-block">
-                        <i class="fas fa-info-circle me-2"></i>Enter numeric values (Humidity 0-100, pH 0-14, Rainfall 0-500) for accurate predictions.
-                    </div>
-                </div>
-                <hr/>
+        <div class="card mnc-card mb-4">
+            <div class="card-body p-4">
                 <form method="POST" id="predicatForm">
                     {% csrf_token %}
                     <div class="row g-3">
                         {% for c in feature_order %}
                             <div class="col-md-4">
-                                <label class="form-label text-uppercase">{{ c }}</label>
+                                <label class="form-label fw-semibold text-uppercase small text-muted">{{ c }}</label>
                                 {% if c == "humidity" %}
-                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="100" step="0.01" required placeholder="Enter Humidity">
+                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="100" step="any" required placeholder="0 - 100 (%)">
                                 {% elif c == "ph" %}
-                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="14" step="0.01" required placeholder="Enter pH">
+                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="14" step="any" required placeholder="0 - 14">
                                 {% elif c == "rainfall" %}
-                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="500" step="0.01" required placeholder="Enter Rainfall">
+                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="500" step="any" required placeholder="0 - 500 (mm)">
+                                {% elif c == "temperature" %}
+                                    <input type="number" class="form-control" name="{{ c }}" step="any" required placeholder="e.g., 24.5 (°C)">
                                 {% else %}
-                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="100" step="0.01" required placeholder="Enter {{ c|title }}">
+                                    <input type="number" class="form-control" name="{{ c }}" min="0" step="any" required placeholder="e.g., 50 (mg/kg)">
                                 {% endif %}
                             </div>
                         {% endfor %}
                     </div>
-                    <div class="d-flex flex-wrap gap-2 mt-3">
-                        <button type="submit" class="btn btn-success shadow-lg"><i class="fas fa-wand-magic-sparkles me-2"></i>Predict Crop</button>
-                        <button type="reset" class="btn btn-outline-secondary shadow-lg"><i class="fas fa-bolt me-2"></i>User Sample</button>
-                        <button type="reset" class="btn btn-danger shadow-lg"><i class="fas fa-undo me-2"></i>Reset</button>
+                    <div class="d-flex flex-wrap gap-2 mt-4">
+                        <button type="submit" class="btn btn-mnc px-4 py-2"><i class="fas fa-wand-magic-sparkles me-2"></i>Run Prediction</button>
+                        <button type="button" id="btnSample" class="btn btn-outline-success px-3 py-2 fw-semibold"><i class="fas fa-shuffle me-2"></i>Random Sample</button>
+                        <button type="reset" class="btn btn-outline-secondary px-3 py-2"><i class="fas fa-undo me-2"></i>Reset</button>
                     </div>
                 </form>
+
                 {% if result %}
-                    <div class="alert alert-success">
-                        Recommended Crop:<strong> {{ result | title }}</strong>
-                    </div>
-                {% endif %}
-                {% if last_data %}
-                    <div class="small text-muted mt-3">
-                        <i class="fas fa-clock-rotate-left me-2"></i>Input Used: 
-                        {% for key, value in last_data.items %}
-                            <code>{{key}}={{value}}</code>{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
+                    <div class="alert alert-success border-0 shadow-sm mt-4 d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width: 44px; height: 44px;">
+                                <i class="fas fa-seedling fa-lg"></i>
+                            </div>
+                            <div>
+                                <div class="small text-uppercase fw-bold text-success">Optimal Crop Match</div>
+                                <div class="fs-4 fw-bold text-dark">{{ result|title }}</div>
+                            </div>
+                        </div>
+                        <span class="badge bg-success px-3 py-2">Verified Match</span>
                     </div>
                 {% endif %}
 
+                {% if last_data %}
+                    <div class="small text-muted mt-3 bg-light p-2 rounded">
+                        <i class="fas fa-sliders me-1 text-success"></i><strong>Parameters Analyzed:</strong> 
+                        {% for key, value in last_data.items %}
+                            <code class="text-dark">{{ key }}={{ value }}</code>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mnc-card">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3"><i class="fas fa-table me-2 text-success"></i>Agronomic Parameter Reference</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle small mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Unit</th>
+                                <th>Range</th>
+                                <th>Agronomic Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Nitrogen (N)</strong></td><td>mg/kg</td><td>0 – 140</td><td>Drives leaf canopy & chlorophyll synthesis.</td></tr>
+                            <tr><td><strong>Phosphorus (P)</strong></td><td>mg/kg</td><td>5 – 145</td><td>Strengthens root architecture & flowering.</td></tr>
+                            <tr><td><strong>Potassium (K)</strong></td><td>mg/kg</td><td>5 – 205</td><td>Enhances drought & disease resilience.</td></tr>
+                            <tr><td><strong>Soil pH</strong></td><td>pH</td><td>3.5 – 9.5</td><td>Governs soil nutrient solubility (6.0–7.5 ideal).</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Uncropped Full Image + Info Cards -->
+    <div class="col-lg-4">
+        <div class="d-flex flex-column gap-4">
+            <div class="card mnc-card overflow-hidden">
+                <div style="background-color: #0f291e;">
+                    <img src="{% static 'images/predict-image.png' %}" alt="Soil Analysis" class="w-100 d-block" style="height: auto; object-fit: contain;">
+                </div>
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-2"><i class="fas fa-lightbulb me-2 text-success"></i>Calibration Guidelines</h6>
+                    <ul class="list-unstyled small text-muted mb-0">
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Use laboratory soil health card values for N-P-K.</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Enter seasonal average rainfall in millimeters (mm).</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i>Click <strong>Random Sample</strong> to simulate real field profiles.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mnc-card p-4">
+                <h6 class="fw-bold mb-2"><i class="fas fa-vial me-2 text-success"></i>N-P-K Breakdown</h6>
+                <p class="small text-muted mb-2">Primary soil macronutrients:</p>
+                <div class="small">
+                    <div class="mb-1"><span class="badge bg-success me-1">N</span> Nitrogen — Vegetative Growth</div>
+                    <div class="mb-1"><span class="badge bg-primary me-1">P</span> Phosphorus — Root & Seed Yield</div>
+                    <div><span class="badge bg-warning text-dark me-1">K</span> Potassium — Plant Immunity</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    (function(){
+        const form = document.getElementById('predicatForm');
+        const inputs = form ? form.querySelectorAll('input[name]') : [];
+        const cropProfiles = [
+            { N: 90, P: 42, K: 43, temperature: 21.0, humidity: 82.0, ph: 6.5, rainfall: 205.0 },
+            { N: 78, P: 48, K: 20, temperature: 22.5, humidity: 65.0, ph: 6.2, rainfall: 85.0 },
+            { N: 40, P: 68, K: 80, temperature: 18.5, humidity: 17.0, ph: 7.3, rainfall: 80.0 },
+            { N: 118, P: 46, K: 20, temperature: 24.0, humidity: 80.0, ph: 6.9, rainfall: 80.0 },
+            { N: 100, P: 28, K: 30, temperature: 25.5, humidity: 58.0, ph: 6.8, rainfall: 158.0 },
+            { N: 20, P: 134, K: 200, temperature: 22.6, humidity: 92.0, ph: 5.9, rainfall: 112.0 }
+        ];
+        function randomize(val, variance, min, max, decimals = 1) {
+            const offset = (Math.random() * 2 - 1) * variance;
+            const result = Math.min(max, Math.max(min, val + offset));
+            return decimals === 0 ? Math.round(result) : Number(result.toFixed(decimals));
+        }
+        document.getElementById('btnSample')?.addEventListener('click', () => {
+            const base = cropProfiles[Math.floor(Math.random() * cropProfiles.length)];
+            const sample = {
+                N: randomize(base.N, 12, 0, 140, 0),
+                P: randomize(base.P, 8, 5, 145, 0),
+                K: randomize(base.K, 8, 5, 205, 0),
+                temperature: randomize(base.temperature, 2.5, 5, 45, 1),
+                humidity: randomize(base.humidity, 5.0, 10, 100, 1),
+                ph: randomize(base.ph, 0.4, 3.5, 9.5, 2),
+                rainfall: randomize(base.rainfall, 20.0, 20, 450, 1)
+            };
+            inputs.forEach(inp => { if (sample[inp.name] !== undefined) inp.value = sample[inp.name]; });
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({ icon: 'success', title: 'Sample Loaded', text: 'Realistic field metrics populated.', timer: 1300, showConfirmButton: false });
+            }
+        });
+    })();
+</script>
 {% endblock %}

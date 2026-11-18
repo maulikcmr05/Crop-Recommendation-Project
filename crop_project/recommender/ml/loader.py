@@ -17,5 +17,5 @@ def predict_one(feature_dict):
     order = bundle["feature_cols"]
 
     X = [[float(feature_dict[c]) for c in order]]
-    pred = model.predict(X)
+    pred = model.predict(X)[0]
     return pred

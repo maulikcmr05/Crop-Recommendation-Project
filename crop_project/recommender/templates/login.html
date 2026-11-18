@@ -3,80 +3,55 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<style>
-    body {
-        background-color: #d2fcd2;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-    main {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
-</style>
-
-<div class="row justify-content-center my-auto py-4">
-    <div class="col-lg-10">
-        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+<div class="row justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="col-xl-10">
+        <div class="card mnc-card overflow-hidden">
             <div class="row g-0">
-                <!-- Left Image Column -->
-                <div class="col-md-6 position-relative d-none d-md-block" 
-                     style="background: url('{% static 'images/login-image.png' %}') top center / cover no-repeat; min-height: 480px;">
-                    <div class="position-absolute start-0 top-0 w-100 h-100" 
-                         style="background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0.95) 100%);">
-                    </div>
-                    <div class="position-absolute bottom-0 p-4 text-white">
-                        <h4 class="fw-semibold mb-2">Crop Recommendation</h4>
-                        <p class="mb-3 text-white-50">Login to your account to access personalized crop recommendations and exclusive features.</p>
-                        <ul class="small list-unstyled mb-0">
-                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Access exclusive features</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Personalized recommendations</li>
-                            <li><i class="fas fa-check-circle text-success me-2"></i> 24/7 customer support</li>
-                        </ul>
+                <!-- Left Panel: Full-Bleed Image -->
+                <div class="col-lg-5 position-relative d-none d-lg-block" style="min-height: 440px; background-color: #0f291e;">
+                    <img src="{% static 'images/login-image.png' %}" alt="Login" class="w-100 h-100" style="object-fit: cover; object-position: center;">
+                    <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white" style="background: linear-gradient(to top, rgba(15, 41, 30, 0.95) 20%, transparent 100%);">
+                        <div class="small">
+                            <div class="mb-1"><i class="fas fa-check-circle text-warning me-2"></i>Instant ML Crop Predictions</div>
+                            <div><i class="fas fa-check-circle text-warning me-2"></i>Saved Soil History & Analytics</div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Right Login Form Column -->
-                <div class="col-md-6 bg-white d-flex align-items-center">
-                    <div class="p-4 p-lg-5 w-100">
-                        <h3 class="mb-4 fw-semibold"><i class="fas fa-user me-2 text-success"></i> User Login</h3>
-                        <form method="POST" id="loginForm">
-                            {% csrf_token %}
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <label class="form-label">Email</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                        <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Password</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                        <input type="password" class="form-control" id="pwd1" name="password" placeholder="Enter your password" required>
-                                        <button type="button" class="btn btn-outline-secondary" id="togglePwd" title="Show/Hide">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
+                <!-- Right Panel: Login Form -->
+                <div class="col-lg-7 p-4 p-md-5 bg-white d-flex flex-column justify-content-center">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle align-self-start px-3 py-1 mb-2 fw-bold">
+                        CROP RECOMMENDATION SYSTEM
+                    </span>
+                    <h3 class="fw-bold mb-1">Welcome Back</h3>
+                    <p class="text-muted small mb-4">Enter your registered email and password to continue</p>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope text-success"></i></span>
+                                <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
                             </div>
-                            <div class="mt-4">
-                                <button type="submit" id="loginBtn" class="btn btn-success w-100 py-2 fw-semibold rounded-pill">
-                                    Login
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock text-success"></i></span>
+                                <input type="password" class="form-control" id="loginPwd" name="password" placeholder="Enter your password" required>
+                                <button type="button" class="btn btn-outline-secondary" onclick="const i=document.getElementById('loginPwd'); i.type=i.type==='password'?'text':'password';">
+                                    <i class="fas fa-eye"></i>
                                 </button>
-                                <div class="text-center mt-3">
-                                    <span class="small">New here? 
-                                        <a class="text-decoration-none ms-1 fw-semibold text-success" href="{% url 'signup' %}">
-                                            <i class="fas fa-user-plus"></i> Sign Up
-                                        </a>
-                                    </span>
-                                </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                        <button type="submit" class="btn btn-mnc w-100 py-2 mb-3">
+                            <i class="fas fa-right-to-bracket me-2"></i>Login
+                        </button>
+                        <div class="text-center small text-muted">
+                            Don't have an account? <a href="{% url 'signup' %}" class="text-success fw-semibold text-decoration-none">Sign Up</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

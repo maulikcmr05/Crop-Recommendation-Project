@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="col-xl-10">
+        <div class="card mnc-card overflow-hidden">
+            <div class="row g-0">
+                <!-- Left Panel: Full-Bleed Image -->
+                <div class="col-lg-5 position-relative d-none d-lg-block" style="min-height: 440px; background-color: #0f291e;">
+                    <img src="{% static 'images/admin-image.png' %}" alt="Admin Portal" class="w-100 h-100" style="object-fit: cover; object-position: center;">
+                    <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white" style="background: linear-gradient(to top, rgba(15, 41, 30, 0.95) 20%, transparent 100%);">
+                        <div class="small">
+                            <div class="mb-1"><i class="fas fa-chart-pie text-warning me-2"></i>Analytics & Telemetry</div>
+                            <div><i class="fas fa-users-gear text-warning me-2"></i>User & Prediction Management</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Admin Form -->
+                <div class="col-lg-7 p-4 p-md-5 bg-white d-flex flex-column justify-content-center">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle align-self-start px-3 py-1 mb-2 fw-bold">
+                        CROP RECOMMENDATION SYSTEM
+                    </span>
+                    <h3 class="fw-bold mb-1">Admin Sign In</h3>
+                    <p class="text-muted small mb-4">Authorized administrator credentials required</p>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Admin Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user-shield text-success"></i></span>
+                                <input type="text" class="form-control" name="username" placeholder="Enter admin username" required>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-key text-success"></i></span>
+                                <input type="password" class="form-control" id="adminPwd" name="password" placeholder="Enter admin password" required>
+                                <button type="button" class="btn btn-outline-secondary" onclick="const i=document.getElementById('adminPwd'); i.type=i.type==='password'?'text':'password';">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-mnc w-100 py-2">
+                            <i class="fas fa-right-to-bracket me-2"></i>Access Dashboard
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
