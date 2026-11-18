@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.9/css/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg bg-success bg-opacity-25 shadow-sm rounded-bottom-4 px-3">
+<body style="background-color: #aed1ae; min-height: 100vh; display: flex; flex-direction: column;">
+    <nav class="navbar navbar-expand-lg bg-success bg-opacity-25 shadow-lg rounded-bottom-4 px-3 border-bottom border-success">
   <div class="container-fluid">
     <a class="navbar-brand fw-semibold" href="#"><i class="fas fa-seedling me-2 text-success"></i>Crop Recommendation</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent">
@@ -21,7 +22,10 @@
       <ul class="navbar-nav ms-auto">
         {% if user.is_authenticated and not user.is_staff %}
         <li class="nav-item">
-          <a class="nav-link active" href="#"><i class="fas fa-flask me-2 text-success"></i>Prediction</a>
+          <a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home me-2 text-success"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'predict' %}"><i class="fas fa-flask me-2 text-success"></i>Prediction</a>
         </li>
         <li class="nav-item">
           <a class="nav-link active" href="#"><i class="fas fa-clock-rotate-left me-2 text-success"></i> History</a>
@@ -36,11 +40,12 @@
           <a class="nav-link active" href="{% url 'logout' %}"><i class="fas fa-right-from-bracket me-2 text-success"></i>Logout</a>
         </li>
         {% elif user.is_authenticated and user.is_staff %}
+
         <li class="nav-item">
           <a class="nav-link active" href="#"><i class="fas fa-gauge me-2 text-success"></i>Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="#"><i class="fas fa-table me-2 text-success"></i> Prediction</a>
+          <a class="nav-link active" href="{% url 'predict' %}"><i class="fas fa-table me-2 text-success"></i> Prediction</a>
         </li>
         <li class="nav-item">
           <a class="nav-link active" href="#"><i class="fas fa-user me-2 text-success"></i>Users</a>

@@ -3,15 +3,58 @@
 {% block title %}Predict Crop{% endblock %}
 
 {% block content %}
-<style>
-    body {
-        background-color: #d2fcd2;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-</style>
-<div class="row justify-content-center ">
-    Predict Crop
+
+<div class="row g-4 " >
+    <div class="col-lg-8">
+        <div class="card shadow-lg border-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3><i class="fas fa-flask me-2 text-success"></i>Crop Recommendation</h3>
+                    <div class="text-muted small d-none d-md-block">
+                        <i class="fas fa-info-circle me-2"></i>Enter numeric values (Humidity 0-100, pH 0-14, Rainfall 0-500) for accurate predictions.
+                    </div>
+                </div>
+                <hr/>
+                <form method="POST" id="predicatForm">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        {% for c in feature_order %}
+                            <div class="col-md-4">
+                                <label class="form-label text-uppercase">{{ c }}</label>
+                                {% if c == "humidity" %}
+                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="100" step="0.01" required placeholder="Enter Humidity">
+                                {% elif c == "ph" %}
+                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="14" step="0.01" required placeholder="Enter pH">
+                                {% elif c == "rainfall" %}
+                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="500" step="0.01" required placeholder="Enter Rainfall">
+                                {% else %}
+                                    <input type="number" class="form-control" name="{{ c }}" min="0" max="100" step="0.01" required placeholder="Enter {{ c|title }}">
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <button type="submit" class="btn btn-success shadow-lg"><i class="fas fa-wand-magic-sparkles me-2"></i>Predict Crop</button>
+                        <button type="reset" class="btn btn-outline-secondary shadow-lg"><i class="fas fa-bolt me-2"></i>User Sample</button>
+                        <button type="reset" class="btn btn-danger shadow-lg"><i class="fas fa-undo me-2"></i>Reset</button>
+                    </div>
+                </form>
+                {% if result %}
+                    <div class="alert alert-success">
+                        Recommended Crop:<strong> {{ result | title }}</strong>
+                    </div>
+                {% endif %}
+                {% if last_data %}
+                    <div class="small text-muted mt-3">
+                        <i class="fas fa-clock-rotate-left me-2"></i>Input Used: 
+                        {% for key, value in last_data.items %}
+                            <code>{{key}}={{value}}</code>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

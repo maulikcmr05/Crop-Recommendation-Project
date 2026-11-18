@@ -38,8 +38,22 @@ def signup_view(request):
         return redirect('predict')
     return render(request, 'signup.html')
 
+from .ml.loader import predict_one,load_bundle
 def predict_view(request):
-    return render(request, 'predict.html')
+    feature_order = load_bundle()["feature_cols"]
+    result = None
+    last_data = None
+    if request.method == 'POST':
+        data = {}
+        try:
+            for c in feature_order:
+                data[c] = float(request.POST.get(c))
+        except ValueError:
+            messages.error(request, 'Invalid input. Please enter valid numeric values.')
+            return redirect('predict')
+        label = predict_one(data)
+
+    return render(request, 'predict.html',locals())
 
 def logout_view(request):
     logout(request)
