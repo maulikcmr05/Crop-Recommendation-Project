@@ -180,6 +180,8 @@ Once running, open your browser and visit:
   ```
 
 ---
+##<img src="https://githubusercontent.com" width="32" height="32" alt="Animated Icon" /> 
+link:[https://crop-recommendation-project.onrender.com](https://crop-recommendation-project.onrender.com)
 
 ## 👤 Author
 
