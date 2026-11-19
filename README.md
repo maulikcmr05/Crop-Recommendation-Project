@@ -181,7 +181,7 @@ Once running, open your browser and visit:
 
 ---
 
-link:[https://crop-recommendation-project.onrender.com](https://crop-recommendation-project.onrender.com)
+link:[https://crop-recommendation-project-yjnj.onrender.com](https://crop-recommendation-project-yjnj.onrender.com)
 
 ## 👤 Author
 
